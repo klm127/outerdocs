@@ -1,0 +1,15 @@
+{
+  "name": "jsdoc-outerdocs-plugin",
+  "version": "1.0.0",
+  "description": "link external docs",
+  "main": "outerdocs.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "jsdoc -c conf.json && start docs-out/index.html"
+  },
+  "author": "klm127",
+  "license": "ISC"
+}

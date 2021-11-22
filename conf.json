@@ -1,0 +1,13 @@
+{
+    "opts": {
+        "destination": "./docs-out/",
+        "recurse":true
+    },
+    "source": {
+        "include": ["./lib"]
+    },
+    "plugins": [
+        "./outerdocs.js"
+    ]
+
+}
