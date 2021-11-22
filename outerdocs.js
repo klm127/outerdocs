@@ -1,53 +1,66 @@
 const TAG_NAME = "outerdocs";
 
-const LINK_SOURCES = {}
 const LINKS = []
 
-
-function getURLend(s, name) {
-
+function getLinkName(tagValue) {
+    let firstDotIndex = tagValue.indexOf('.');
+    if(firstDotIndex >= 0) {
+        return tagValue.substr(0, firstDotIndex);
+    }
+    else {
+        return tagValue;
+    }
 }
 
-exports.handlers = {
-    newDoclet: function(doclet, deps) {
-        doclet = doclet.doclet;
-        doclet.description += "<b>HI</b>"
-        if(doclet.tags) {
-            for(let tag of doclet.tags) {
-                if(tag.title == TAG_NAME) {
-                    if(doclet.kind == "external") {
-                        if(!LINK_SOURCES[doclet.name]) {
-                            LINK_SOURCES[doclet.name] = {
-                                url: tag.value,
-                                links: []
-                            };
-                        } else {
-                            LINK_SOURCES[doclet.name].url = tag.value;
+
+exports.defineTags = function(dictionary,b) {
+    dictionary.defineTag(TAG_NAME, {
+        mustHaveValue: true,
+        onTagged: function(doclet, tag) {
+            // get the outder docs config
+            let config = env.conf[TAG_NAME];
+            if(config) {
+                let linkName = getLinkName(tag.value);
+                let linkConfig = config[linkName];
+                if(linkConfig) {
+                    if(linkConfig.url) {
+                        let appendHTML = "";
+                        let workingValue = tag.value;
+
+                        if(linkConfig.dropFirst) {
+                            workingValue = workingValue.replace(linkName+".", "");
                         }
-                    } else {
-                        if(!LINK_SOURCES[tag.value]) {
-                            LINK_SOURCES[tag.value] = {
-                                links: [doclet]
-                            }
-                        } else {
-                            LINK_SOURCES[tag.value].links.push(doclet);
+
+                        //dots or slashes
+                        if(linkConfig.structure == "dots") {
+                            appendHTML += workingValue;
                         }
+                        else if(linkConfig.structure == "slashes"){
+                            workingValue = workingValue.replaceAll('.','/')
+                        }
+
+                        //append html or not
+                        if(linkConfig.appendHTML) {
+                            workingValue += ".html";
+                        }
+
+                        
+                        let fullURL = linkConfig.url + workingValue;
+                        if(!doclet.see) {
+                            doclet.see = [];
+                        }
+                        doclet.see.push(`{@link ${fullURL} ${tag.value}}`);
+                        LINKS.push(doclet);
                     }
                 }
             }
         }
-    },
-    beforeParse: function(a,b) {
-        console.log('before parse', b)
-    },
-    parseComplete: function(sourceFiles, doclets) {
-        console.log('parse complete...', LINK_SOURCES);
-        for(let key of Object.keys(LINK_SOURCES)) {
-            let linkSource = LINK_SOURCES[key];
-            for(let link of linkSource.links) {
-                //console.log(key, link);
-            }
-            //console.log(LINK_SOURCES[key]);
-        }
+    })
+};
+
+exports.handlers = {
+    processingComplete: function() {
+        console.log(Object.keys(this))
+        console.log(this._visitor);
     }
 }

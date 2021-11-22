@@ -8,6 +8,21 @@
     },
     "plugins": [
         "./outerdocs.js"
-    ]
+    ],
+    "outerdocs": {
+        "Phaser": {
+            "url": "https://newdocs.phaser.io/docs/3.55.2/",
+            "structure": "dots",
+            "appendhtml": false,
+            "dropFirst": false
+        },
+        "BuiltIn": {
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/",
+            "structure": "slashes",
+            "appendhtml": false,
+            "dropFirst": true
+
+        }
+    }
 
 }
