@@ -2,7 +2,28 @@
 
 _by klm127_
 
-Outerdocs is a plugin for jsdocs which eases the linking of external documentation. It was inspired by [Intersphinx](https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html) for Python.
+Outerdocs is a plugin for jsdocs which simplifies the linking of external documentation by using external namespace configurations defined in the jsdoc configuration object. It was inspired by [Intersphinx](https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html) for Python.
+
+Outerdocs takes a tag like:
+```
+/*
+* @outerdocs Phaser.Physics
+*/
+class MyCustomClass {...}
+```
+
+And gives you output documentation like this:
+
+<dl class="details">
+ <dt class="tag-see">See:</dt>
+ <dd class="tag-see">
+    <ul>
+     <li>
+       <a href="https://newdocs.phaser.io/docs/3.55.2/Phaser.Physics">Phaser.Physics</a>
+     </li>
+    </ul>
+ </dd>
+</dl>
 
 <h2 id="toc"> Table of Contents </h2>
 
@@ -18,28 +39,13 @@ Outerdocs is a plugin for jsdocs which eases the linking of external documentati
 1. Looks for `@outerdocs` tags in source files.
 2. When the tag is found, finds the external doc namespace reference, which is the first word in the value. So for `@outerdocs Phaser.Game`, outerdoc will find `Phaser` 
 3. Looks in the [jsdoc configuration file](https://jsdoc.app/about-configuring-jsdoc.html) for the `outerdocs` configuration object.
-4. Looks in the `outerdocs` object for the found namespace configuration object. 
+4. Looks in the `outerdocs` object for the external namespace configuration object. 
 5. Builds a URL based on that namespace's settings and the value given to `@outerdocs`.
 6. Adds a [@link](https://jsdoc.app/tags-inline-link.html) to the [@see array](https://jsdoc.app/tags-see.html) of the doclet.
 7. Sets the url of the `@link` to the built URL. Sets the text of the `@link` to the text that was given to the `@outerdocs` tag.
 
-You can see a simple example of the output on [these docs](http://www.quaffingcode.com/outerdocs/)
+You can see a simple example of the output on [these docs](http://www.quaffingcode.com/outerdocs/), which link React, MDN/Javascript core, and Phaser documentation.
 
-So, for example, in your jsdoc you might have an outerdocs tag like this:
-```
-* @outerdocs Phaser.Physics
-```
-And in your output documentation, you will have something like:
-<dl class="details">
- <dt class="tag-see">See:</dt>
- <dd class="tag-see">
-    <ul>
-     <li>
-       <a href="https://newdocs.phaser.io/docs/3.55.2/Phaser.Physics">Phaser.Physics</a>
-     </li>
-    </ul>
- </dd>
-</dl>
 
 <h2 id="toc2">Installing</h2>
 
@@ -95,8 +101,7 @@ Based on these configuration settings, this `outerdocs` command would be the equ
 */
 ```
 
-And the output in the docs will be:
-And in your output documentation, you will have something like:
+And in your output documentation, you will have:
 <dl class="details">
  <dt class="tag-see">See:</dt>
  <dd class="tag-see">
@@ -153,7 +158,7 @@ Based on these configuration settings, the `@outerdocs` tag would be the equival
 */
 ```
 
-And in your output documentation, you will have something like:
+And in your output documentation, you will have:
 <dl class="details">
  <dt class="tag-see">See:</dt>
  <dd class="tag-see">
@@ -206,7 +211,7 @@ Based on these configuration settings, the `@outerdocs` tag would be the equival
 render() {}
  ```
 
-And in your output documentation, you will have something like:
+And in your output documentation, you will have:
 <dl class="details">
  <dt class="tag-see">See:</dt>
  <dd class="tag-see">
