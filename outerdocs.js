@@ -1,4 +1,13 @@
+/**
+ * Created by Karl Miller, November 2021
+ * 
+ * github.com/klm127
+ * 
+ */
+
 const TAG_NAME = "outerdocs";
+
+const logger = require('jsdoc/util/logger')
 
 function getLinkName(tagValue) {
     let firstDotIndex = tagValue.indexOf('.');
@@ -26,6 +35,15 @@ function getIdLink(tagValue) {
     }
 }
 
+exports.handlers = {
+    parseBegin: function() { // spit an error if config isn't set up.
+        let outerdocsConfig = env.conf[TAG_NAME];
+        if(!outerdocsConfig) {
+            logger.warn(`${TAG_NAME} is not defined in ${env.opts.configure}. Make ${TAG_NAME} a top level property or this plugin will have no effect. See Readme for more info.`);
+        }
+    }
+}
+
 exports.defineTags = function(dictionary,b) {
     dictionary.defineTag(TAG_NAME, {
         mustHaveValue: true,
@@ -48,6 +66,12 @@ exports.defineTags = function(dictionary,b) {
                                 workingValue = "";
                             }
                         }
+                        else {
+                            if(linkConfig.dropFirst != false) {
+                                logger.warn(`dropFirst was not defined in ${env.opts.configure}: ${linkName}.dropFirst. Defaulting to false.`);
+                            }
+
+                        }
 
                         //dots or slashes
                         if(linkConfig.structure == "dots") {
@@ -56,10 +80,19 @@ exports.defineTags = function(dictionary,b) {
                         else if(linkConfig.structure == "slashes"){
                             workingValue = workingValue.replaceAll('.','/')
                         }
+                        else {
+                            logger.warn(`structure was not defined in ${env.opts.configure}: ${linkName}.structure. Should be either "dots" or "slashes". Defaulting to "dots"`);
+                            appendHTML += workingValue;
+                        }
 
                         //append html or not
                         if(linkConfig.appendhtml) {
                             workingValue += ".html";
+                        }
+                        else {
+                            if(linkConfig.appendhtml != false) {
+                                logger.warn(`appending html was not defined in ${env.opts.configure}: ${linkName}.appendhtml. Defaulting to 'false'`);
+                            }
                         }
 
                         
@@ -69,6 +102,9 @@ exports.defineTags = function(dictionary,b) {
                         }
                         doclet.see.push(`{@link ${fullURL} ${tag.value}}`);
                     }
+                }
+                else {
+                    logger.warn(`${linkName} was not defined in the ${env.opts.configure} file. ${linkName} external links will not be added for ${doclet.name}`);
                 }
             }
         }
