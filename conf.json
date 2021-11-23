@@ -22,6 +22,12 @@
             "appendhtml": false,
             "dropFirst": true
 
+        },
+        "React": {
+            "url":"https://reactjs.org/docs/",
+            "structure": "slashes",
+            "appendhtml": true,
+            "dropFirst": true
         }
     }
 

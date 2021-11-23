@@ -10,6 +10,22 @@ function getLinkName(tagValue) {
     }
 }
 
+function getIdLink(tagValue) {
+    let poundIndex = tagValue.indexOf('#');
+    if(poundIndex < 0) {
+        return {
+            id: '',
+            linkBase: tagValue
+        }
+    }
+    else {
+        return {
+            linkBase: tagValue.substr(0, poundIndex),
+            id: tagValue.substr(poundIndex)
+        }
+    }
+}
+
 exports.defineTags = function(dictionary,b) {
     dictionary.defineTag(TAG_NAME, {
         mustHaveValue: true,
@@ -23,6 +39,8 @@ exports.defineTags = function(dictionary,b) {
                     if(linkConfig.url) {
                         let appendHTML = "";
                         let workingValue = tag.value;
+                        let idParse = getIdLink(workingValue)
+                        workingValue = idParse.linkBase;
 
                         if(linkConfig.dropFirst) {
                             workingValue = workingValue.replace(linkName+".", "");
@@ -40,12 +58,12 @@ exports.defineTags = function(dictionary,b) {
                         }
 
                         //append html or not
-                        if(linkConfig.appendHTML) {
+                        if(linkConfig.appendhtml) {
                             workingValue += ".html";
                         }
 
                         
-                        let fullURL = linkConfig.url + workingValue;
+                        let fullURL = linkConfig.url + workingValue + idParse.id;
                         if(!doclet.see) {
                             doclet.see = [];
                         }
