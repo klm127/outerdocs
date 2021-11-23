@@ -4,7 +4,7 @@ _by klm127_
 
 Outerdocs is a plugin for jsdocs which simplifies the linking of external documentation by using external namespace configurations defined in the jsdoc configuration object. It was inspired by [Intersphinx](https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html) for Python.
 
-Outerdocs takes a tag like:
+Outerdocs tag usage looks like this:
 ```
 /*
 * @outerdocs Phaser.Physics
@@ -12,7 +12,7 @@ Outerdocs takes a tag like:
 class MyCustomClass {...}
 ```
 
-And gives you output documentation like this:
+Outerdocs adds a `@see` tag like this:
 
 <dl class="details">
  <dt class="tag-see">See:</dt>
@@ -78,7 +78,7 @@ Inside your `conf.json:outerdocs` property add a property for the external names
 
 <h2 id="toc4">Referencing the namespace</h2>
 
-To reference the namespace, use the `@outerdocs <namespace>` tag. The `<namespace>` value can include member names and the html link will be constructed based on the settings in the configuration file.
+To reference the namespace, use the `@outerdocs <namespace>` tag. The `<namespace>` value can include member names. The final html link will be constructed based on the settings in the configuration file and the value given to the `@outerdocs` tag.
 
 #### Example of a Phaser3 reference
 
@@ -91,7 +91,7 @@ class myImage extends Phaser.GameObjects.Image{
 }
 ```
 
-This will add a new value to the `@see` ([link](https://jsdoc.app/tags-see.html)) array of the doclet.
+Outerdocs adds a new value to the `@see` ([link](https://jsdoc.app/tags-see.html)) array of the doclet.
 
 Based on these configuration settings, this `outerdocs` command would be the equivalent of writing:
 
@@ -136,8 +136,11 @@ Lets say we want to be able to reference built in objects from the MDN documenta
 ```
 
 `"structure":"slashes"` tells outerdocs to convert the dots in the namespace reference to slashes in the URL.
+
 `"appendhtml":false"` tells outerdocs not to append `.html` at the end of the URL.
+
 `"dropFirst":true"` tells outerdocs to not include the namespace name, "BuiltIn" when constructing the URL.
+
 
 #### Example of an MDN built in reference
 
