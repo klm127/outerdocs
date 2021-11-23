@@ -1,7 +1,5 @@
 const TAG_NAME = "outerdocs";
 
-const LINKS = []
-
 function getLinkName(tagValue) {
     let firstDotIndex = tagValue.indexOf('.');
     if(firstDotIndex >= 0) {
@@ -11,7 +9,6 @@ function getLinkName(tagValue) {
         return tagValue;
     }
 }
-
 
 exports.defineTags = function(dictionary,b) {
     dictionary.defineTag(TAG_NAME, {
@@ -29,6 +26,9 @@ exports.defineTags = function(dictionary,b) {
 
                         if(linkConfig.dropFirst) {
                             workingValue = workingValue.replace(linkName+".", "");
+                            if(workingValue == linkName) {
+                                workingValue = "";
+                            }
                         }
 
                         //dots or slashes
@@ -50,17 +50,9 @@ exports.defineTags = function(dictionary,b) {
                             doclet.see = [];
                         }
                         doclet.see.push(`{@link ${fullURL} ${tag.value}}`);
-                        LINKS.push(doclet);
                     }
                 }
             }
         }
     })
 };
-
-exports.handlers = {
-    processingComplete: function() {
-        console.log(Object.keys(this))
-        console.log(this._visitor);
-    }
-}
