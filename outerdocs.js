@@ -102,6 +102,9 @@ exports.defineTags = function(dictionary,b) {
                         }
                         doclet.see.push(`{@link ${fullURL} ${tag.value}}`);
                     }
+                    else {
+                        logger.warn(`url was not defined in ${env.opts.configure}: ${linkName}.url. ${doclet.name} will not have external link.`);
+                    }
                 }
                 else {
                     logger.warn(`${linkName} was not defined in the ${env.opts.configure} file. ${linkName} external links will not be added for ${doclet.name}`);
