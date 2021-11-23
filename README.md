@@ -6,6 +6,8 @@ Outerdocs is a plugin for jsdocs which eases the linking of external documentati
 
 It looks for `@outerdocs` tags and, when it finds one, figures out the appropriate link based on your configuration settings and adds that to the `@see` list for the doclet with a `@link` tag to the configured documentation source. The URL of the link will be the base URL, with the path to the resource generated based on the settings in your jsdoc configuration file.
 
+You can see a simple example of the output on [these docs](http://www.quaffingcode.com/outerdocs/)
+
 ## Installing
 
 Outerdocs is not on NPM yet. It needs to be added to your package manually for the moment.
