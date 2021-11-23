@@ -45,17 +45,50 @@
     <section>
         <article><h2>Outerdocs</h2>
 <p><em>by klm127</em></p>
-<p>Outerdocs is a plugin for jsdocs which eases the linking of external documentation.</p>
-<p>It looks for <code>@outerdocs</code> tags and, when it finds one, figures out the appropriate link based on your configuration settings and adds that to the <code>@see</code> list for the doclet with a <code>@link</code> tag to the configured documentation source. The URL of the link will be the base URL, with the path to the resource generated based on the settings in your jsdoc configuration file.</p>
+<p>Outerdocs is a plugin for jsdocs which eases the linking of external documentation. It was inspired by <a href="https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html">Intersphinx</a> for Python.</p>
+<h2 id="toc"> Table of Contents </h2>
+<ol>
+<li><a href="#toc1">How it works</a></li>
+<li><a href="#toc2">Installing</a></li>
+<li><a href="#toc3">Adding/Configuring an external namespace</a></li>
+<li><a href="#toc4">Referencing an external namespace</a></li>
+<li><a href="#toc5">Configuring a namespace for MDN built ins</a></li>
+<li><a href="#toc6">Configuring a namespace for React documentation</a></li>
+</ol>
+<h2 id="toc1"> How it works</h2>
+<ol>
+<li>Looks for <code>@outerdocs</code> tags in source files.</li>
+<li>When the tag is found, finds the external doc namespace reference, which is the first word in the value. So for <code>@outerdocs Phaser.Game</code>, outerdoc will find <code>Phaser</code></li>
+<li>Looks in the <a href="https://jsdoc.app/about-configuring-jsdoc.html">jsdoc configuration file</a> for the <code>outerdocs</code> configuration object.</li>
+<li>Looks in the <code>outerdocs</code> object for the found namespace configuration object.</li>
+<li>Builds a URL based on that namespace's settings and the value given to <code>@outerdocs</code>.</li>
+<li>Adds a <a href="https://jsdoc.app/tags-inline-link.html">@link</a> to the <a href="https://jsdoc.app/tags-see.html">@see array</a> of the doclet.</li>
+<li>Sets the url of the <code>@link</code> to the built URL. Sets the text of the <code>@link</code> to the text that was given to the <code>@outerdocs</code> tag.</li>
+</ol>
 <p>You can see a simple example of the output on <a href="http://www.quaffingcode.com/outerdocs/">these docs</a></p>
-<h2>Installing</h2>
+<p>So, for example, in your jsdoc you might have an outerdocs tag like this:</p>
+<pre class="prettyprint source"><code>* @outerdocs Phaser.Physics
+</code></pre>
+<p>And in your output documentation, you will have something like:</p>
+<dl class="details">
+ <dt class="tag-see">See:</dt>
+ <dd class="tag-see">
+    <ul>
+     <li>
+       <a href="https://newdocs.phaser.io/docs/3.55.2/Phaser.Physics">Phaser.Physics</a>
+     </li>
+    </ul>
+ </dd>
+</dl>
+<h2 id="toc2">Installing</h2>
 <p>Outerdocs is not on NPM yet. It needs to be added to your package manually for the moment.</p>
 <ol>
 <li>Copy <code>outerdocs.js</code> from this repo to the repository you want to document.</li>
 <li>Create a <a href="https://jsdoc.app/about-configuring-jsdoc.html">configuration file</a> for jsdoc if you don't already have one.</li>
 <li>Create a top level property in the configuration file named <code>&quot;outerdocs&quot;</code>.</li>
+<li>Add outerdocs to the plugins array in the jsdoc config. E.g.: <code>&quot;plugins&quot;: [ &quot;./docs-configuration/outerdocs.js&quot; ]</code> . Note that for a plugin outside of the jsdoc default plugins, you need to include the <code>./</code> to tell jsdoc it's a relative path.</li>
 </ol>
-<h2>Adding an external namespace</h2>
+<h2 id="toc3">Adding an external namespace</h2>
 <p>Inside your <code>conf.json:outerdocs</code> property add a property for the external namespace. This is what you will use to quickly reference with the <code>@outerdocs</code> tag throughout your source file. Each namespace should have 4 properties; <code>url</code>, <code>structure</code>, <code>appendhtml</code>, and <code>dropFirst</code>.</p>
 <h4>Example of a Phaser3 configuration</h4>
 <pre class="prettyprint source"><code>{
@@ -70,7 +103,7 @@
     }
 }
 </code></pre>
-<h2>Referencing the namespace</h2>
+<h2 id="toc4">Referencing the namespace</h2>
 <p>To reference the namespace, use the <code>@outerdocs &lt;namespace&gt;</code> tag. The <code>&lt;namespace&gt;</code> value can include member names and the html link will be constructed based on the settings in the configuration file.</p>
 <h4>Example of a Phaser3 reference</h4>
 <pre class="prettyprint source"><code>/**
@@ -86,8 +119,20 @@ class myImage extends Phaser.GameObjects.Image{
 * @see { @link https://newdocs.phaser.io/docs/3.55.2/Phaser.GameObjects.Image Phaser.GameObjects.Image}
 */
 </code></pre>
-<h2>Example: Configuring a namespace for MDN built ins</h2>
-<p>Lets say we want to be able to reference built in objects from the MDN documentation.</p>
+<p>And the output in the docs will be:
+And in your output documentation, you will have something like:</p>
+<dl class="details">
+ <dt class="tag-see">See:</dt>
+ <dd class="tag-see">
+    <ul>
+     <li>
+       <a href="https://newdocs.phaser.io/docs/3.55.2/Phaser.GameObjects.Image">Phaser.GameObjects.Image</a>
+     </li>
+    </ul>
+ </dd>
+</dl>
+<h2 id="toc5">Configuring a namespace for MDN built ins</h2>
+<p>Lets say we want to be able to reference built in objects from the MDN documentation. MDN's documentation is different from Phasers. Each namespace is separated with <code>/</code> characters instead of <code>.</code> characters. We also want our internal namespace name to NOT be included in the final URL.</p>
 <h4>Example of an MDN Built ins configuration</h4>
 <pre class="prettyprint source"><code>{
     ...
@@ -118,7 +163,18 @@ class myFunction {
 * @see { @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind BuiltIn.Function.bind}
 */
 </code></pre>
-<h2>Example: Configuring a namespace for React documentation</h2>
+<p>And in your output documentation, you will have something like:</p>
+<dl class="details">
+ <dt class="tag-see">See:</dt>
+ <dd class="tag-see">
+    <ul>
+     <li>
+       <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind">BuiltIn.Function.bind</a>
+     </li>
+    </ul>
+ </dd>
+</dl>
+<h2 id="toc6">Example: Configuring a namespace for React documentation</h2>
 <h4>Example React namespace configuration file</h4>
 <pre class="prettyprint source"><code>...
 &quot;outerdocs&quot;: {
@@ -147,7 +203,18 @@ class myFunction {
 * @see { @link https://reactjs.org/docs/react-component.html#render React.react-component#render}
 */
 render() {}
-</code></pre></article>
+</code></pre>
+<p>And in your output documentation, you will have something like:</p>
+<dl class="details">
+ <dt class="tag-see">See:</dt>
+ <dd class="tag-see">
+    <ul>
+     <li>
+       <a href="https://reactjs.org/docs/react-component.html#render">React.react-component#render</a>
+     </li>
+    </ul>
+ </dd>
+</dl></article>
     </section>
 
 
@@ -164,7 +231,7 @@ render() {}
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Mon Nov 22 2021 20:47:56 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Mon Nov 22 2021 21:14:36 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
