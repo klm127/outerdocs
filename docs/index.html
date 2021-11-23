@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h2>Outerdocs</h2>
+<p><em>by klm127</em></p>
+<p>Outerdocs is a plugin for jsdocs which eases the linking of external documentation.</p>
+<p>It looks for <code>@outerdocs</code> tags and, when it finds one, figures out the appropriate link based on your configuration settings and adds that to the <code>@see</code> list for the doclet with a <code>@link</code> tag to the configured documentation source. The URL of the link will be the base URL, with the path to the resource generated based on the settings in your jsdoc configuration file.</p>
+<p>You can see examples of the</p>
+<h2>Installing</h2>
+<p>Outerdocs is not on NPM yet. It needs to be added to your package manually for the moment.</p>
+<ol>
+<li>Copy <code>outerdocs.js</code> from this repo to the repository you want to document.</li>
+<li>Create a <a href="https://jsdoc.app/about-configuring-jsdoc.html">configuration file</a> for jsdoc if you don't already have one.</li>
+<li>Create a top level property in the configuration file named <code>&quot;outerdocs&quot;</code>.</li>
+</ol>
+<h2>Adding an external namespace</h2>
+<p>Inside your <code>conf.json:outerdocs</code> property add a property for the external namespace. This is what you will use to quickly reference with the <code>@outerdocs</code> tag throughout your source file. Each namespace should have 4 properties; <code>url</code>, <code>structure</code>, <code>appendhtml</code>, and <code>dropFirst</code>.</p>
+<h4>Example of a Phaser3 configuration</h4>
+<pre class="prettyprint source"><code>{
+    ...
+    &quot;outerdocs&quot;: {
+        &quot;Phaser&quot;: {
+            &quot;url&quot;: &quot;https://newdocs.phaser.io/docs/3.55.2/&quot;,
+            &quot;structure&quot;: &quot;dots&quot;,
+            &quot;appendhtml&quot;: false,
+            &quot;dropFirst&quot;: false
+        }
+    }
+}
+</code></pre>
+<h2>Referencing the namespace</h2>
+<p>To reference the namespace, use the <code>@outerdocs &lt;namespace&gt;</code> tag. The <code>&lt;namespace&gt;</code> value can include member names and the html link will be constructed based on the settings in the configuration file.</p>
+<h4>Example of a Phaser3 reference</h4>
+<pre class="prettyprint source"><code>/**
+ * @outerdocs Phaser.GameObjects.Image
+ * @description Some object that's been extended
+ */
+class myImage extends Phaser.GameObjects.Image{
+}
+</code></pre>
+<p>This will add a new value to the <code>@see</code> (<a href="https://jsdoc.app/tags-see.html">link</a>) array of the doclet.</p>
+<p>Based on these configuration settings, this <code>outerdocs</code> command would be the equivalent of writing:</p>
+<pre class="prettyprint source"><code>/**
+* @see { @link https://newdocs.phaser.io/docs/3.55.2/Phaser.GameObjects.Image Phaser.GameObjects.Image}
+*/
+</code></pre>
+<h2>Example: Configuring a namespace for MDN built ins</h2>
+<p>Lets say we want to be able to reference built in objects from the MDN documentation.</p>
+<h4>Example of an MDN Built ins configuration</h4>
+<pre class="prettyprint source"><code>{
+    ...
+    &quot;outerdocs: {
+        &quot;BuiltIn&quot;: {
+            &quot;url&quot;: &quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/&quot;,
+            &quot;structure&quot;: &quot;slashes&quot;,
+            &quot;appendhtml&quot;: false,
+            &quot;dropFirst&quot;: true
+
+        }
+    }
+}
+</code></pre>
+<p><code>&quot;structure&quot;:&quot;slashes&quot;</code> tells outerdocs to convert the dots in the namespace reference to slashes in the URL.
+<code>&quot;appendhtml&quot;:false&quot;</code> tells outerdocs not to append <code>.html</code> at the end of the URL.
+<code>&quot;dropFirst&quot;:true&quot;</code> tells outerdocs to not include the namespace name, &quot;BuiltIn&quot; when constructing the URL.</p>
+<h4>Example of an MDN built in reference</h4>
+<pre class="prettyprint source"><code>/**
+* Does some cool stuff and binds the context differently 
+* @outerdocs BuiltIn.Function.bind
+*/
+class myFunction {
+}
+</code></pre>
+<p>Based on these configuration settings, the <code>@outerdocs</code> tag would be the equivalent of writing:</p>
+<pre class="prettyprint source"><code>/*
+* @see { @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind BuiltIn.Function.bind}
+*/
+</code></pre>
+<h2>Example: Configuring a namespace for React documentation</h2>
+<h4>Example React namespace configuration file</h4>
+<pre class="prettyprint source"><code>...
+&quot;outerdocs&quot;: {
+        &quot;React&quot;: {
+            &quot;url&quot;:&quot;https://reactjs.org/docs/&quot;,
+            &quot;structure&quot;: &quot;slashes&quot;,
+            &quot;appendhtml&quot;: true,
+            &quot;dropFirst&quot;: true
+        }
+    }
+</code></pre>
+<p>Name references don't have to work as normal javascript syntax</p>
+<h4>Example outerdoccing a React component function with an ID</h4>
+<pre class="prettyprint source"><code>class MyComponent extends React.Component {
+
+    /**
+     * This is how my component renders
+     * @outerdocs React.react-component#render
+     */
+    render() {
+    }
+}
+</code></pre>
+<p>Based on these configuration settings, the <code>@outerdocs</code> tag would be the equivalent of writing</p>
+<pre class="prettyprint source"><code>/*
+* @see { @link https://reactjs.org/docs/react-component.html#render React.react-component#render}
+*/
+render() {}
+</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="ExtendedBuiltIns.html">ExtendedBuiltIns</a></li><li><a href="ExtendedPhaserObjects.html">ExtendedPhaserObjects</a></li><li><a href="ExtendedReact.html">ExtendedReact</a></li></ul><h3>Classes</h3><ul><li><a href="ExtendedBuiltIns.myMap.html">myMap</a></li><li><a href="ExtendedPhaserObjects.myImage.html">myImage</a></li><li><a href="ExtendedReact.MyComponent.html">MyComponent</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.5</a> on Mon Nov 22 2021 20:46:14 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
