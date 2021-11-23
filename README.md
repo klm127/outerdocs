@@ -39,7 +39,7 @@ Outerdocs adds a `@see` tag like this:
 1. Looks for `@outerdocs` tags in source files.
 2. When the tag is found, finds the external doc namespace reference, which is the first word in the value. So for `@outerdocs Phaser.Game`, outerdoc will find `Phaser` 
 3. Looks in the [jsdoc configuration file](https://jsdoc.app/about-configuring-jsdoc.html) for the `outerdocs` configuration object.
-4. Looks in the `outerdocs` object for the external namespace configuration object. 
+4. Looks in the `outerdocs` object for the external namespace configuration object. For example, `outerdocs.Phaser`.
 5. Builds a URL based on that namespace's settings and the value given to `@outerdocs`.
 6. Adds a [@link](https://jsdoc.app/tags-inline-link.html) to the [@see array](https://jsdoc.app/tags-see.html) of the doclet.
 7. Sets the url of the `@link` to the built URL. Sets the text of the `@link` to the text that was given to the `@outerdocs` tag.
@@ -55,6 +55,7 @@ Outerdocs is not on NPM yet. It needs to be added to your package manually for t
 2. Create a [configuration file](https://jsdoc.app/about-configuring-jsdoc.html) for jsdoc if you don't already have one. 
 3. Create a top level property in the configuration file named `"outerdocs"`.
 4. Add outerdocs to the plugins array in the jsdoc config. E.g.: `"plugins": [ "./docs-configuration/outerdocs.js" ]` . Note that for a plugin outside of the jsdoc default plugins, you need to include the `./` to tell jsdoc it's a relative path.
+5. Add namespace configurations to the `"outerdocs"` property for each namespace you want to configure. Described in the next step.
 
 
 <h2 id="toc3">Adding an external namespace</h2>
