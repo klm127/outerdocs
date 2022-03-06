@@ -44,7 +44,7 @@ Outerdocs adds a `@see` tag like this:
 6. Adds a [@link](https://jsdoc.app/tags-inline-link.html) to the [@see array](https://jsdoc.app/tags-see.html) of the doclet.
 7. Sets the url of the `@link` to the built URL. Sets the text of the `@link` to the text that was given to the `@outerdocs` tag.
 
-You can see a simple example of the output on [these docs](http://www.quaffingcode.com/outerdocs/), which link React, MDN/Javascript core, and Phaser documentation.
+You can see a simple example of the output on [these docs](https://www.quaffingcode.com/outerdocs/), which link React, MDN/Javascript core, and Phaser documentation.
 
 
 <h2 id="toc2">Installing</h2>
