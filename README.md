@@ -4,6 +4,8 @@ _by klm127_
 
 Outerdocs is a plugin for jsdocs which simplifies the linking of external documentation by using external namespace configurations defined in the jsdoc configuration object. It was inspired by [Intersphinx](https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html) for Python.
 
+You can see an example of outerdocs being used in this repository.
+
 Outerdocs tag usage looks like this:
 ```
 /*
